@@ -191,8 +191,10 @@ class App extends Component {
 
     addTodoItem(item) {
         let stamp = (new Date()).getTime();
+        let itemLength = this.state.items.length;
+        let itemId = (itemLength > 0)?this.state.items[itemLength - 1].id + 1:1;
         let newItem = { 
-            id: this.state.items.length + 1,
+            id: itemId,
             text: item.text,
             isDone: false,
             edit: false,
