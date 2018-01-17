@@ -23,28 +23,20 @@ const TodoItem = (props) =>  (
 )
 
 class TodoItemContent extends Component {
-    constructor(props) {
-        super(props);
-        this.onClickDel = this.onClickDel.bind(this);
-        this.onEditToggle = this.onEditToggle.bind(this);
-        this.onStateChange = this.onStateChange.bind(this);
-        this.handleTodoItem = this.props.handleTodoItem.bind(this);
+    onClickDel = (e) => {
+        this.props.handleTodoItem("DEL", this.props.item)
     }
 
-    onClickDel(e) {
-        this.handleTodoItem("DEL", this.props.item)
-    }
-
-    onEditToggle(e) {
+    onEditToggle = (e) => {
         let {item} = this.props;
         item.edit = !item.edit;
-        this.handleTodoItem("EDIT", item);
+        this.props.handleTodoItem("EDIT", item);
     }
 
-    onStateChange(e) {
+    onStateChange = (e) => {
         let {item} = this.props;
         item.isDone = !item.isDone;
-        this.handleTodoItem("EDIT", item);
+        this.props.handleTodoItem("EDIT", item);
     }
 
     render() {
@@ -63,28 +55,21 @@ class TodoItemContent extends Component {
 }
 
 class TodoEditForm extends Component {
-    constructor(props) {
-        super(props);
-        this.onEditSave = this.onEditSave.bind(this);
-        this.onEditChange = this.onEditChange.bind(this);
-        this.handleTodoItem = this.props.handleTodoItem.bind(this);
-    }
-
     componentDidMount() {
         this.refs.editInput.focus()
     }
 
-    onEditChange(e) {
+    onEditChange = (e) => {
         let {item} = this.props;
         item.text = e.target.value;
-        this.handleTodoItem("EDIT", item);
+        this.props.handleTodoItem("EDIT", item);
     }
 
-    onEditSave(e) {
+    onEditSave = (e) => {
         e.preventDefault();
         let {item} = this.props;
         item.edit = !item.edit;
-        this.handleTodoItem("EDIT", item);
+        this.props.handleTodoItem("EDIT", item);
     }
 
     render() {
@@ -127,21 +112,18 @@ class TodoList extends Component {
 class TodoForm extends Component {
     constructor(props) {
         super(props);
-        this.onChange = this.onChange.bind(this);
-        this.onSubmit = this.onSubmit.bind(this);
-        this.handleTodoItem = this.props.handleTodoItem.bind(this);
         this.state = { TodoText: "" }
     }
 
-    onChange(e) {
+    onChange = (e) => {
         this.setState({TodoText: e.target.value})
     }
 
-    onSubmit(e) {
+    onSubmit = (e) => {
         e.preventDefault();
         let {TodoText} = this.state;
         if (TodoText.length > 0) {
-            this.handleTodoItem('ADD', {text: TodoText});
+            this.props.handleTodoItem('ADD', {text: TodoText});
             this.setState({TodoText: ""});
         }
     }
@@ -162,12 +144,7 @@ class TodoStateNav extends Component {
         setFilterType: PropTypes.func.isRequired
     }
 
-    constructor(props) {
-        super(props);
-        this.clickFilterTag = this.clickFilterTag.bind(this);
-    }
-
-    clickFilterTag(type) {
+    clickFilterTag = (type) => {
         this.props.setFilterType(type);
     }
     render() {
@@ -184,12 +161,6 @@ class TodoStateNav extends Component {
 class App extends Component {
     constructor(props) {
         super(props);
-        this.saveToLS = this.saveToLS.bind(this);
-        this.addTodoItem = this.addTodoItem.bind(this);
-        this.delTodoItem = this.delTodoItem.bind(this);
-        this.editTodoItem = this.editTodoItem.bind(this);
-        this.setFilterType = this.setFilterType.bind(this);
-        this.handleTodoItem = this.handleTodoItem.bind(this);
         this.state = {
             items: {},
             filterType: "ALL"
@@ -205,10 +176,10 @@ class App extends Component {
     }
 
     componentDidUpdate() {
-        this.saveToLS();
+        this.storeToLocalStroage();
     }
 
-    handleTodoItem(type, item) {
+    handleTodoItem = (type, item) => {
         switch (type) {
             case 'ADD' : this.addTodoItem(item); break
             case 'DEL' : this.delTodoItem(item); break
@@ -217,7 +188,7 @@ class App extends Component {
         }
     }
 
-    addTodoItem(item) {
+    addTodoItem = (item) => {
         let stamp = (new Date()).getTime();
         let { items } = this.state;
         let itemLength = Object.keys(items).length;
@@ -232,24 +203,24 @@ class App extends Component {
         this.setState({items: items});
     }
 
-    delTodoItem(item) {
+    delTodoItem = (item) => {
         let { items } = this.state;
         delete items[item.id];
         this.setState({items: items});
     }
 
-    editTodoItem(item) {
+    editTodoItem = (item) => {
         item.update = (new Date()).getTime();
         let { items } = this.state;
         items[item.id] = item;
         this.setState({items: items});
     }
 
-    setFilterType(filterType) {
+    setFilterType = (filterType) => {
         this.setState({filterType: filterType})
     }
 
-    setFilterItems() {
+    setFilterItems = () => {
         let filterType = this.state.filterType;
         let newItems = {};
         let { items } = this.state;
@@ -274,7 +245,7 @@ class App extends Component {
         return newItems
     }
 
-    saveToLS() {
+    storeToLocalStroage = () => {
         let store = window.localStorage;
         store.setItem('todoList', JSON.stringify(this.state.items));
     }
