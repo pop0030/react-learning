@@ -111,10 +111,10 @@ const TodoList = (props) =>  (
     </ul>
 )
 
-const MapTodoListItem = (props) => props.items.map( (item) => (
-    <li key={ item.id }>
+const MapTodoListItem = (props) => Object.keys(props.items).map( (item) => (
+    <li key={ item }>
         <TodoItem 
-            item={ item } 
+            item={ props.items[item] } 
             handleTodoItem={ props.handleTodoItem }>
         </TodoItem>
     </li>
@@ -155,12 +155,20 @@ class TodoForm extends Component {
 }
 
 class TodoStateNav extends Component {
+    constructor(props) {
+        super(props);
+        this.clickFilterTag = this.clickFilterTag.bind(this);
+    }
+
+    clickFilterTag(type) {
+        this.props.setFilterType(type);
+    }
     render() {
         return (
             <div className="todoStateNav">
-                Total: {this.props.items.length} |
-                Todo: { this.props.items.filter( (item) => !item.isDone ).length } |
-                Done: { this.props.items.filter( (item) => item.isDone ).length }
+                Total:<span onClick={ () => this.clickFilterTag("ALL")  }>{ Object.keys(this.props.items).length }</span>
+                Todo: <span onClick={ () => this.clickFilterTag("TODO") }>{ Object.keys(this.props.items).filter( (item) => !this.props.items[item].isDone ).length }</span>
+                Done: <span onClick={ () => this.clickFilterTag("DONE") }>{ Object.keys(this.props.items).filter( (item) =>  this.props.items[item].isDone ).length }</span>
             </div>
         )
     }
@@ -169,14 +177,15 @@ class TodoStateNav extends Component {
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            items: []
-        }
         this.addTodoItem = this.addTodoItem.bind(this);
         this.delTodoItem = this.delTodoItem.bind(this);
         this.editTodoItem = this.editTodoItem.bind(this);
-        this.resetTodoList = this.resetTodoList.bind(this);
+        this.setFilterType = this.setFilterType.bind(this);
         this.handleTodoItem = this.handleTodoItem.bind(this);
+        this.state = {
+            items: {},
+            filterType: "ALL"
+        }
     }
 
     handleTodoItem(type, item) {
@@ -184,52 +193,64 @@ class App extends Component {
             case 'ADD' : this.addTodoItem(item); break
             case 'DEL' : this.delTodoItem(item); break
             case 'EDIT': this.editTodoItem(item); break
-            case 'RESET': this.resetTodoList(item); break
             default: break
         }
     }
 
     addTodoItem(item) {
         let stamp = (new Date()).getTime();
-        let itemLength = this.state.items.length;
-        let itemId = (itemLength > 0)?this.state.items[itemLength - 1].id + 1:1;
-        let newItem = { 
+        let _items = this.state.items;
+        let itemLength = Object.keys(_items).length;
+        let itemId = (itemLength > 0)?parseInt(Object.keys(_items)[itemLength - 1],0) + 1:1;
+        _items[itemId] = { 
             id: itemId,
             text: item.text,
             isDone: false,
             edit: false,
             update: stamp
         }
-        let _items = this.state.items.concat(newItem);
-        this.setState({items: _items})
+        this.setState({items: _items});
     }
 
     delTodoItem(item) {
-        let delId = item.id
-        let _items = this.state.items.filter( (item) => item.id !== delId);
-        this.setState({items: _items})
+        let _items = this.state.items;
+        delete _items[item.id];
+        this.setState({items: _items});
     }
 
     editTodoItem(item) {
-        let newItem = item;
-        newItem.update = (new Date()).getTime();
-        let _items = this.state.items.map( (item) => {
-            if (item.id === newItem.id) {
-                return newItem;
-            } else {
-                item.edit = false;
-                return item
-            }
-        });
-        this.setState({items: _items})
+        item.update = (new Date()).getTime();
+        let _items = this.state.items;
+        _items[item.id] = item;
+        this.setState({items: _items});
     }
 
-    resetTodoList(e) {
-        let _items = this.state.items.map( (item) => {
-            item.edit = false;
-            return item
-        });
-        this.setState({items: _items})
+    setFilterType(filterType) {
+        this.setState({filterType: filterType})
+    }
+
+    setFilter(items) {
+        let filterType = this.state.filterType;
+        let _items = {};
+        switch(filterType) {
+            case "ALL":  Object.assign(_items, items); break
+            case "TODO": 
+                for (let key in items) {
+                    let _t = {};
+                    _t[key] = items[key];
+                    if (!items[key].isDone) _items = Object.assign(_items, _t );
+                }
+            break
+            case "DONE": 
+                for (let key in items) {
+                    let _t = {};
+                    _t[key] = items[key];
+                    if (items[key].isDone) _items = Object.assign(_items, _t );
+                }
+            break
+            default: break
+        }
+        return _items
     }
 
     render() {
@@ -237,8 +258,8 @@ class App extends Component {
             <div className="App">
                 <div className="Container">
                     <TodoForm handleTodoItem={ this.handleTodoItem }></TodoForm>
-                    <TodoStateNav items={ this.state.items }></TodoStateNav>
-                    <TodoList items={ this.state.items } handleTodoItem={ this.handleTodoItem }></TodoList>
+                    <TodoStateNav items={ this.state.items } setFilterType={ this.setFilterType }></TodoStateNav>
+                    <TodoList items={ this.setFilter(this.state.items) } handleTodoItem={ this.handleTodoItem }></TodoList>
                 </div>
             </div>
         )

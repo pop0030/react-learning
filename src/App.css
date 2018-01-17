@@ -49,6 +49,24 @@
   border-bottom: 1px solid #d3d3d3;
 }
 
+.todoStateNav>span {
+  padding: 2px 4px;
+  cursor: pointer;
+  border-radius: 8px;
+  background: #aaa;
+  color: #fff;
+  margin: 0 12px 0 4px;
+  font-size: 12px;
+  display: inline-block;
+  min-width: 20px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.todoStateNav>span:hover {
+  opacity: 1;
+}
+
 .todoControl::after {
   content: "";
   display: table;
