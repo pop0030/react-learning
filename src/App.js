@@ -229,9 +229,10 @@ class App extends Component {
         this.setState({filterType: filterType})
     }
 
-    setFilter(items) {
+    setFilterItems() {
         let filterType = this.state.filterType;
         let _items = {};
+        let items = this.state.items;
         switch(filterType) {
             case "ALL":  Object.assign(_items, items); break
             case "TODO": 
@@ -259,7 +260,7 @@ class App extends Component {
                 <div className="Container">
                     <TodoForm handleTodoItem={ this.handleTodoItem }></TodoForm>
                     <TodoStateNav items={ this.state.items } setFilterType={ this.setFilterType }></TodoStateNav>
-                    <TodoList items={ this.setFilter(this.state.items) } handleTodoItem={ this.handleTodoItem }></TodoList>
+                    <TodoList items={ this.setFilterItems() } handleTodoItem={ this.handleTodoItem }></TodoList>
                 </div>
             </div>
         )
