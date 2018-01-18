@@ -8,9 +8,5 @@
     },
     "plugins": [
         "react"
-    ],
-    "rules": {
-        "arrow-body-style": ["error", "always"],
-        "implicit-arrow-linebreak": ["error", "beside"]
-    }
+    ]
 }

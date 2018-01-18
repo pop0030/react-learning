@@ -32,31 +32,37 @@ class App extends Component {
     }
 
     addTodoItem = (item) => {
-        let stamp = (new Date()).getTime();
-        let { items } = this.state;
-        let itemLength = Object.keys(items).length;
-        let itemId = (itemLength > 0) ? parseInt(Object.keys(items)[itemLength - 1], 0) + 1 : 1;
-        items[itemId] = {
-            id: itemId,
-            text: item.text,
-            isDone: false,
-            edit: false,
-            update: stamp
-        };
-        this.setState({ items: items });
+        this.setState(prevState => {
+            let stamp = (new Date()).getTime();
+            let { items } = prevState;
+            let itemLength = Object.keys(items).length;
+            let itemId = (itemLength > 0) ? parseInt(Object.keys(items)[itemLength - 1], 0) + 1 : 1;
+            items[itemId] = {
+                id: itemId,
+                text: item.text,
+                isDone: false,
+                edit: false,
+                update: stamp
+            };
+            return { items: items };
+        });
     }
 
     delTodoItem = (item) => {
-        let { items } = this.state;
-        delete items[item.id];
-        this.setState({ items: items });
+        this.setState(prevState => {
+            let { items } = prevState;
+            delete items[item.id];
+            return { items: items };
+        });
     }
 
     editTodoItem = (item) => {
-        item.update = (new Date()).getTime();
-        let { items } = this.state;
-        items[item.id] = item;
-        this.setState({ items: items });
+        this.setState(prevState => {
+            item.update = (new Date()).getTime();
+            let { items } = prevState;
+            items[item.id] = item;
+            return { items: items };
+        });
     }
 
     setFilterType = (filterType) => {
@@ -109,6 +115,7 @@ class App extends Component {
         }
     }
 
+    //for test
     test = () => {
         for (let i = 0; i < 1001; i++) {
             this.addTodoItem({ text: '廢物' });
