@@ -1,58 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import TodoEditForm from './TodoEditForm';
-import TodoItemContent from './TodoItemContent';
+import { connect } from 'react-redux';
+import TodoItem from './TodoItem';
 
-const TodoItem = (props) => {
+const mapStateToProps = state => ({
+    TodoItems: state.TodoItems
+});
+
+const TodoList = ({ TodoItems }) => {
     return (
-        <div className="todoItem">
-            {
-                props.item.edit ? (
-                    <TodoEditForm
-                        item={props.item}
-                        handleTodoItem={props.handleTodoItem}
-                    />
-                ) : (
-                    <TodoItemContent
-                        item={props.item}
-                        handleTodoItem={props.handleTodoItem}
-                    />
-                )
-            }
-        </div>
+        <ul className="todoList">
+            {Object.keys(TodoItems).map((k) => (
+                <li key={k}>
+                    <TodoItem item={TodoItems[k]} />
+                </li>
+            ))}
+        </ul>
     );
 };
 
-TodoItem.propTypes = {
-    item: PropTypes.object.isRequired,
-    handleTodoItem: PropTypes.func.isRequired
+TodoList.propTypes = {
+    TodoItems: PropTypes.object.isRequired
 };
 
-class TodoList extends Component {
-    static propTypes = {
-        items: PropTypes.object.isRequired,
-        handleTodoItem: PropTypes.func.isRequired
-    }
-    renderTodoItem(item) {
-        return (
-            <li key={item.id}>
-                <TodoItem
-                    item={item}
-                    handleTodoItem={this.props.handleTodoItem}
-                />
-            </li>
-        );
-    }
-    renderTodoItems() {
-        return Object.keys(this.props.items).map((key) => {
-            return this.renderTodoItem(this.props.items[key]);
-        });
-    }
-    render() {
-        return (
-            <ul className="todoList">{ this.renderTodoItems() }</ul>
-        );
-    }
-}
-
-export default TodoList;
+export default connect(mapStateToProps)(TodoList);

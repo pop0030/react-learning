@@ -1,36 +1,29 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { addTodoItem } from '../action';
 
-class TodoForm extends Component {
-    static propTypes = {
-        handleTodoItem: PropTypes.func.isRequired
-    }
-    constructor(props) {
-        super(props);
-        this.state = { TodoText: '' };
-    }
-
-    onChange = (e) => {
-        this.setState({ TodoText: e.target.value });
-    }
-
-    onSubmit = (e) => {
+const TodoForm = ({ dispatch }) => {
+    this.onSubmit = (e) => {
         e.preventDefault();
-        let { TodoText } = this.state;
-        if (TodoText.length > 0) {
-            this.props.handleTodoItem('ADD', { text: TodoText });
-            this.setState({ TodoText: '' });
-        }
-    }
+        dispatch(addTodoItem({ text: this.inputText.value }));
+        this.inputText.value = '';
+    };
+    return (
+        <form onSubmit={this.onSubmit} className="todoControl">
+            <input
+                type="text"
+                ref={(input) => {
+                    this.inputText = input;
+                }}
+            />
+            <input type="submit" value="Add" />
+        </form>
+    );
+};
 
-    render() {
-        return (
-            <form onSubmit={this.onSubmit} className="todoControl">
-                <input type="text" onChange={this.onChange} value={this.state.TodoText} />
-                <input type="submit" value="Add" />
-            </form>
-        );
-    }
-}
+TodoForm.propTypes = {
+    dispatch: PropTypes.func
+};
 
-export default TodoForm;
+export default connect()(TodoForm);

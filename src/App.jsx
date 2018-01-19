@@ -6,13 +6,6 @@ import './App.css';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            items: {},
-            filterType: 'ALL'
-        };
-    }
 
     componentDidMount() {
         this.exportLocalStroage();
@@ -22,7 +15,7 @@ class App extends Component {
         this.storeToLocalStroage();
     }
 
-    handleTodoItem = (type, item) => {
+    /*handleTodoItem = (type, item) => {
         switch (type) {
         case 'ADD': this.addTodoItem(item); break;
         case 'DEL': this.delTodoItem(item); break;
@@ -63,7 +56,7 @@ class App extends Component {
             items[item.id] = item;
             return { items: items };
         });
-    }
+    }*/
 
     setFilterType = (filterType) => {
         this.setState({ filterType: filterType });
@@ -115,26 +108,12 @@ class App extends Component {
         }
     }
 
-    //for test
-    test = () => {
-        for (let i = 0; i < 1001; i++) {
-            this.addTodoItem({ text: '廢物' });
-        }
-    }
-
-    delAll = () => {
-        this.setState({ items: {} });
-    }
-
     render() {
         return (
             <div className="App">
                 <div className="Container">
-                    <input type="button" value="+1000" onClick={this.test} />
-                    <input type="button" value="fuck all" onClick={this.delAll} />
-                    <TodoForm handleTodoItem={this.handleTodoItem} />
-                    <TodoStateNav items={this.state.items} setFilterType={this.setFilterType} />
-                    <TodoList items={this.setFilterItems()} handleTodoItem={this.handleTodoItem} />
+                    <TodoForm />
+                    <TodoList />
                 </div>
             </div>
         );
