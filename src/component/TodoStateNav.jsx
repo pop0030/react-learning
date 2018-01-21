@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { setFilter } from '../action';
+
+const mapStateToProps = state => ({
+    items: state.TodoItems
+});
+
+const mapDispatchToProps = dispatch => ({
+    setFilter: (filterType) => {
+        dispatch(setFilter(filterType));
+    }
+});
 
 class TodoStateNav extends Component {
     static propTypes = {
         items: PropTypes.object.isRequired,
-        setFilterType: PropTypes.func.isRequired
+        setFilter: PropTypes.func.isRequired
     }
     filterAll = () => {
-        this.props.setFilterType('ALL');
+        this.props.setFilter('ALL');
     }
     filterTodo = () => {
-        this.props.setFilterType('TODO');
+        this.props.setFilter('TODO');
     }
     filterDone = () => {
-        this.props.setFilterType('DONE');
+        this.props.setFilter('DONE');
     }
     render() {
         return (
@@ -57,4 +69,4 @@ class TodoStateNav extends Component {
     }
 }
 
-export default TodoStateNav;
+export default connect(mapStateToProps, mapDispatchToProps)(TodoStateNav);

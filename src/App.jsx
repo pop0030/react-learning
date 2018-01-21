@@ -6,93 +6,12 @@ import './App.css';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
 
 class App extends Component {
-
     componentDidMount() {
         this.exportLocalStroage();
     }
 
     componentDidUpdate() {
         this.storeToLocalStroage();
-    }
-
-    /*handleTodoItem = (type, item) => {
-        switch (type) {
-        case 'ADD': this.addTodoItem(item); break;
-        case 'DEL': this.delTodoItem(item); break;
-        case 'EDIT': this.editTodoItem(item); break;
-        default: break;
-        }
-    }
-
-    addTodoItem = (item) => {
-        this.setState(prevState => {
-            let stamp = (new Date()).getTime();
-            let { items } = prevState;
-            let itemLength = Object.keys(items).length;
-            let itemId = (itemLength > 0) ? parseInt(Object.keys(items)[itemLength - 1], 0) + 1 : 1;
-            items[itemId] = {
-                id: itemId,
-                text: item.text,
-                isDone: false,
-                edit: false,
-                update: stamp
-            };
-            return { items: items };
-        });
-    }
-
-    delTodoItem = (item) => {
-        this.setState(prevState => {
-            let { items } = prevState;
-            delete items[item.id];
-            return { items: items };
-        });
-    }
-
-    editTodoItem = (item) => {
-        this.setState(prevState => {
-            item.update = (new Date()).getTime();
-            let { items } = prevState;
-            items[item.id] = item;
-            return { items: items };
-        });
-    }*/
-
-    setFilterType = (filterType) => {
-        this.setState({ filterType: filterType });
-    }
-
-    setFilterItems = () => {
-        let filterType = this.state.filterType;
-        let newItems = {};
-        let { items } = this.state;
-        switch (filterType) {
-        case 'ALL': Object.assign(newItems, items); break;
-        case 'TODO':
-            for (let key in items) {
-                if (items[key]) {
-                    let _t = {};
-                    _t[key] = items[key];
-                    if (!items[key].isDone) {
-                        newItems = Object.assign(newItems, _t);
-                    }
-                }
-            }
-            break;
-        case 'DONE':
-            for (let key in items) {
-                if (items[key]) {
-                    let _t = {};
-                    _t[key] = items[key];
-                    if (items[key].isDone) {
-                        newItems = Object.assign(newItems, _t);
-                    }
-                }
-            }
-            break;
-        default: break;
-        }
-        return newItems;
     }
 
     storeToLocalStroage = () => {
@@ -113,6 +32,7 @@ class App extends Component {
             <div className="App">
                 <div className="Container">
                     <TodoForm />
+                    <TodoStateNav />
                     <TodoList />
                 </div>
             </div>

@@ -8,25 +8,25 @@ const TodoItems = (state = {}, action) => {
         delete state[action.item.id];
         return Object.assign({}, state);
     case 'EDIT_TODO':
-        let newState = Object.assign({}, state);
-        newState[action.item.id] = action.item;
-        return Object.assign({}, newState);
+        state[action.item.id] = action.item;
+        return Object.assign({}, state);
     default:
         return state;
     }
 };
 
-/*const TodoForm = (state = '', action) => {
+const TodoListFilter = (state = 'ALL', action) => {
     switch (action.type) {
-    case 'INPUT':
-        return action.text;
+    case 'SET_FILTER':
+        return action.filterType;
     default:
         return state;
     }
-};*/
+};
 
 const TodoApp = combineReducers({
-    TodoItems
+    TodoItems,
+    TodoListFilter
 });
 
 export default TodoApp;

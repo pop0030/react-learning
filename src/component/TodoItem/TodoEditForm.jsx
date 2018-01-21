@@ -1,24 +1,35 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { editTodoItem } from '../../action';
+
+const mapStateToProps = (state, ownProps) => ({
+    TodoItem: Object.assign({}, state.TodoItems[ownProps.item.id])
+});
+
+const mapDispatchToProps = dispatch => ({
+    editTodoItem: item => {
+        dispatch(editTodoItem(item));
+    }
+});
 
 class TodoEditForm extends Component {
     static propTypes = {
-        item: PropTypes.object.isRequired,
-        handleTodoItem: PropTypes.func.isRequired
+        TodoItem: PropTypes.object.isRequired
     }
     componentDidMount() {
-        this.editInput.focus();
+        this.Input.focus();
     }
     onEditChange = (e) => {
-        let { item } = this.props;
+        let item = this.props.TodoItem;
         item.text = e.target.value;
-        this.props.handleTodoItem('EDIT', item);
+        this.props.editTodoItem(item);
     }
     onEditSave = (e) => {
         e.preventDefault();
-        let { item } = this.props;
+        let item = this.props.TodoItem;
         item.edit = !item.edit;
-        this.props.handleTodoItem('EDIT', item);
+        this.props.editTodoItem(item);
     }
     render() {
         return (
@@ -28,10 +39,10 @@ class TodoEditForm extends Component {
             >
                 <input
                     type="text"
-                    ref={(input) => {
-                        this.editInput = input;
+                    ref={(node) => {
+                        this.Input = node;
                     }}
-                    value={this.props.item.text}
+                    value={this.props.TodoItem.text}
                     onChange={this.onEditChange}
                     onBlur={this.onEditSave}
                 />
@@ -40,4 +51,4 @@ class TodoEditForm extends Component {
     }
 }
 
-export default TodoEditForm;
+export default connect(mapStateToProps, mapDispatchToProps)(TodoEditForm);

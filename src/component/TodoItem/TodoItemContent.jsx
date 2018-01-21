@@ -4,21 +4,30 @@ import FontAwesome from 'react-fontawesome';
 import { connect } from 'react-redux';
 import { delTodoItem, editTodoItem } from '../../action';
 
-const mapStateToProps = state => ({
-    TodoItems: state.TodoItems
+const mapStateToProps = (state, ownProps) => ({
+    TodoItem: Object.assign({}, state.TodoItems[ownProps.item.id])
 });
 
-const TodoItemContent = ({ item, dispatch }) => {
-    this.onClickDel = (e) => {
-        dispatch(delTodoItem(item.id));
+const mapDispatchToProps = dispatch => ({
+    delTodoItem: id => {
+        dispatch(delTodoItem(id));
+    },
+    editTodoItem: item => {
+        dispatch(editTodoItem(item));
+    }
+});
+
+const TodoItemContent = ({ TodoItem, delTodoItem, editTodoItem }) => {
+    this.delTodoItem = (e) => {
+        delTodoItem(TodoItem.id);
     };
     this.onEditToggle = (e) => {
-        let { item } = this.props;
-        item.edit = !item.edit;
+        TodoItem.edit = !TodoItem.edit;
+        editTodoItem(TodoItem);
     };
     this.onStateChange = (e) => {
-        item.isDone = !item.isDone;
-        dispatch(editTodoItem(item));
+        TodoItem.isDone = !TodoItem.isDone;
+        editTodoItem(TodoItem);
     };
     return (
         <div>
@@ -26,19 +35,19 @@ const TodoItemContent = ({ item, dispatch }) => {
                 <FontAwesome
                     className="btn-chkbox"
                     onClick={this.onStateChange}
-                    name={item.isDone ? 'check-square-o' : 'square-o'}
+                    name={TodoItem.isDone ? 'check-square-o' : 'square-o'}
                 />
             </div>
             <span
                 className="todoText"
                 onDoubleClick={this.onEditToggle}
-            >{ item.text }
+            >{ TodoItem.text }
             </span>
             <span className="rightCtrl">
                 <FontAwesome
                     className="btn-del"
                     name="trash-o"
-                    onClick={this.onClickDel}
+                    onClick={this.delTodoItem}
                 />
             </span>
         </div>
@@ -49,4 +58,4 @@ const TodoItemContent = ({ item, dispatch }) => {
     props: PropTypes.object.isRequired
 }*/
 
-export default connect(mapStateToProps)(TodoItemContent);
+export default connect(mapStateToProps, mapDispatchToProps)(TodoItemContent);

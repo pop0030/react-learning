@@ -34,7 +34,7 @@ export const editTodoItem = item => {
     };
 };
 
-export const inputText = text => ({
-    type: 'INPUT',
-    text: text
+export const setFilter = text => ({
+    type: 'SET_FILTER',
+    filterType: text
 });
