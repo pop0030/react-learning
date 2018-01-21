@@ -15,7 +15,8 @@ const mapDispatchToProps = dispatch => ({
 
 class TodoEditForm extends Component {
     static propTypes = {
-        TodoItem: PropTypes.object.isRequired
+        TodoItem: PropTypes.object.isRequired,
+        editTodoItem: PropTypes.func.isRequired
     }
     componentDidMount() {
         this.Input.focus();

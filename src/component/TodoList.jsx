@@ -27,7 +27,7 @@ const TodoList = ({ TodoItems }) => {
     return (
         <ul className="todoList">
             {Object.keys(TodoItems).map((k) => (
-                <TodoItem key={k} item={TodoItems[k]}/>
+                <TodoItem key={k} item={TodoItems[k]} />
             ))}
         </ul>
     );

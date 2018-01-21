@@ -54,8 +54,10 @@ const TodoItemContent = ({ TodoItem, delTodoItem, editTodoItem }) => {
     );
 };
 
-/*TodoItemContent.propTypes = {
-    props: PropTypes.object.isRequired
-}*/
+TodoItemContent.propTypes = {
+    TodoItem: PropTypes.object.isRequired,
+    delTodoItem: PropTypes.func.isRequired,
+    editTodoItem: PropTypes.func.isRequired
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoItemContent);

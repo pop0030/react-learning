@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setFilter } from '../action';
@@ -8,65 +8,45 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setFilter: (filterType) => {
-        dispatch(setFilter(filterType));
+    setFilter: (event) => {
+        dispatch(setFilter(event.target.dataset.type || null));
     }
 });
 
-class TodoStateNav extends Component {
-    static propTypes = {
-        items: PropTypes.object.isRequired,
-        setFilter: PropTypes.func.isRequired
-    }
-    filterAll = () => {
-        this.props.setFilter('ALL');
-    }
-    filterTodo = () => {
-        this.props.setFilter('TODO');
-    }
-    filterDone = () => {
-        this.props.setFilter('DONE');
-    }
-    render() {
-        return (
-            <div className="todoStateNav">
-                Total:
-                <span
-                    onClick={this.filterAll}
-                    role="button"
-                    aria-hidden
-                >
-                    {
-                        Object.keys(this.props.items).length
-                    }
-                </span>
-                Todo:
-                <span
-                    onClick={this.filterTodo}
-                    role="button"
-                    aria-hidden
-                >
-                    {
-                        Object.keys(this.props.items).filter((item) => {
-                            return !this.props.items[item].isDone;
-                        }).length
-                    }
-                </span>
-                Done:
-                <span
-                    onClick={this.filterDone}
-                    role="button"
-                    aria-hidden
-                >
-                    {
-                        Object.keys(this.props.items).filter((item) => {
-                            return this.props.items[item].isDone;
-                        }).length
-                    }
-                </span>
-            </div>
-        );
-    }
-}
+const TodoStateNav = ({ items, setFilter }) => {
+    return (
+        <div className="todoStateNav">
+            Total:
+            <span
+                onClick={setFilter}
+                data-type="ALL"
+                role="button"
+                aria-hidden
+            >{Object.keys(items).length}
+            </span>
+            Todo:
+            <span
+                onClick={setFilter}
+                data-type="TODO"
+                role="button"
+                aria-hidden
+            >{Object.keys(items).filter(key => !items[key].isDone).length}
+            </span>
+            Done:
+            <span
+                onClick={setFilter}
+                data-type="DONE"
+                role="button"
+                aria-hidden
+            >{Object.keys(items).filter(key => items[key].isDone).length}
+            </span>
+        </div>
+    );
+};
+
+TodoStateNav.propTypes = {
+    items: PropTypes.object.isRequired,
+    setFilter: PropTypes.func.isRequired
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TodoStateNav);
